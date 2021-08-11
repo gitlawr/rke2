@@ -289,13 +289,16 @@ func validateProfile(clx *cli.Context, nodeType string) {
 
 func validateCloudProviderName(clx *cli.Context) {
 	cloudProvider := clx.String("cloud-provider-name")
-	if cloudProvider == "rancher-vsphere" {
+	if cloudProvider == "rancher-vsphere" || cloudProvider == "harvester"{
 		clx.Set("cloud-provider-name", "external")
-	} else {
-		if slice.ContainsString(clx.FlagNames(), "disable") {
+	}
+	if cloudProvider != "rancher-vsphere" && slice.ContainsString(clx.FlagNames(), "disable"){
 			clx.Set("disable", "rancher-vsphere-cpi")
 			clx.Set("disable", "rancher-vsphere-csi")
-		}
+	}
+	if cloudProvider != "harvester" && slice.ContainsString(clx.FlagNames(), "disable"){
+		clx.Set("disable", "harvester-cloud-provider")
+		clx.Set("disable", "harvester-csi-driver")
 	}
 }
 
